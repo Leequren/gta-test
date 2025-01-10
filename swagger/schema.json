@@ -1,0 +1,221 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "тестовое задание",
+    "version": "1.0.0",
+    "description": "Описание api"
+  },
+  "paths": {
+    "/api/user/{id}": {
+      "get": {
+        "description": "получение информации о пользователе",
+        "responses": {
+          "default": {
+            "description": "успешное получение данных",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/User" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "transactions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{id}/takeoff": {
+      "post": {
+        "description": "снять деньги со счёта пользователя",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "успешное снятие денег у пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{id}/checkBalance": {
+      "get": {
+        "description": "посмотреть баланс пользователя",
+        "responses": {
+          "default": {
+            "description": "успешный просмотр баланса пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "balance": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{id}/topup": {
+      "post": {
+        "description": "пополнить баланс пользователя",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "успешное пополнение баланса",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/{id}/transfer": {
+      "post": {
+        "description": "отправка денег другому пользователю",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetId": {
+                    "type": "number"
+                  },
+                  "amount": {
+                    "type": "number"
+                  }
+                },
+                "required": ["targetId", "amount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "успешная отправка денег",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/create": {
+      "put": {
+        "description": "создание нового пользователя",
+        "responses": {
+          "default": {
+            "description": "успешное создание нового пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "balance": {
+            "type": "number"
+          }
+        },
+        "required": ["id", "balance"]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "targetUserId": {
+            "type": "number"
+          },
+          "timeTransaction": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "userId", "amount", "type", "timeTransaction"]
+      }
+    }
+  }
+}
